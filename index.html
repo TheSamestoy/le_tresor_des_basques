@@ -79,8 +79,8 @@
   </div>
 
   <audio id="mystery-sound" preload="auto">
-  <source src="https://www.soundjay.com/misc/sounds/magic-chime-01.mp3" type="audio/mpeg">
-</audio>
+    <source src="https://www.federation-choeurs-pays-basque.com/wp-content/uploads/sites/1966/2024/01/argizaiola-4vm-chant-all.mp3" type="audio/mpeg">
+  </audio>
 
 <script>
 const images = [
@@ -162,8 +162,16 @@ enigmesData.forEach((data, index) => {
           const phrase = 'Ez dago atzera bueltarik';
           message.innerHTML = [...phrase].map(l => `<span class='hidden-letter'>${l === ' ' ? '&nbsp;' : l}</span>`).join('');
           const spans = message.querySelectorAll('span');
-          audio.volume = 0.5;
-          audio.play().catch(() => {});
+
+          setTimeout(() => {
+            audio.currentTime = 0;
+            audio.volume = 0.8;
+            audio.play().catch(() => {});
+            setTimeout(() => {
+              audio.pause();
+            }, 20000);
+          }, 2000);
+
           spans.forEach(span => {
             const delay = Math.random() * 10;
             setTimeout(() => span.style.opacity = '1', delay * 1000);
