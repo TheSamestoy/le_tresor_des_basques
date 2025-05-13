@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Chasse au trésor interactive</title>
+  <script src="//unpkg.com/alpinejs" defer></script>
+  <style>
+    .hidden { display: none; }
+    .revealed { color: green; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div x-data="{ enigme1:'', enigme2:'', secret1:'', secret2:'' }">
+
+    <!-- Énigme 1 -->
+    <section>
+      <h2>Énigme 1</h2>
+      <p>Quel est le mot magique ?</p>
+      <input type="text" x-model="enigme1" placeholder="Réponse ici">
+      <button @click="if(enigme1.trim().toLowerCase() === 'clé') secret1='révélé'">Valider</button>
+      <p x-show="secret1==='révélé'" class="revealed">Bravo ! Voici ton indice suivant : <em>Le trésor est près du vieux chêne.</em></p>
+    </section>
+
+    <!-- Énigme 2 -->
+    <section x-show="secret1==='révélé'">
+      <h2>Énigme 2</h2>
+      <p>Trouve le chiffre secret :</p>
+      <input type="number" x-model="enigme2">
+      <button @click="if(enigme2 == 42) secret2='révélé'">Valider</button>
+      <p x-show="secret2==='révélé'" class="revealed">Tu as découvert le trésor final !</p>
+    </section>
+
+  </div>
+</body>
+</html>
