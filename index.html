@@ -83,21 +83,25 @@ function changeBackground() {
 bgSlider.style.backgroundImage = `url(${images[0]})`;
 setInterval(changeBackground, 10000);
 
+function hash(str) {
+  return btoa(str.toLowerCase().trim());
+}
+
 const enigmesData = [
-  {q:"Énigme 1",e:"Je commence la nuit, termine le matin, qui suis-je ?",r:"n"},
-  {q:"Énigme 2",e:"Quelle lettre suit immédiatement 'U' dans l'alphabet ?",r:"v"},
-  {q:"Énigme 3",e:"Combien font 3x7 ?",r:"21"},
-  {q:"Énigme 4",e:"Quel est l'animal symbole de la sagesse ?",r:"chouette"},
-  {q:"Énigme 5",e:"Quelle planète est surnommée la planète rouge ?",r:"mars"},
-  {q:"Énigme 6",e:"Quelle couleur obtient-on en mélangeant bleu et jaune ?",r:"vert"},
-  {q:"Énigme 7",e:"Qui a peint la Joconde ?",r:"léonard de vinci"},
-  {q:"Énigme 8",e:"Combien de côtés possède un pentagone ?",r:"5"},
-  {q:"Énigme 9",e:"Quel est le métal précieux jaune ?",r:"or"},
-  {q:"Énigme 10",e:"Quelle capitale européenne est surnommée la ville lumière ?",r:"paris"},
-  {q:"Énigme 11",e:"Quel est le plus grand océan du monde ?",r:"pacifique"},
-  {q:"Énigme 12",e:"Combien de pattes a une araignée ?",r:"8"},
-  {q:"Énigme 13",e:"Quel élément chimique a pour symbole H ?",r:"hydrogène"},
-  {q:"Énigme 14",e:"Quelle langue parle-t-on principalement au Brésil ?",r:"portugais"}
+  {q:"Énigme 1",e:"Je commence la nuit, termine le matin, qui suis-je ?",r:"bg=="},
+  {q:"Énigme 2",e:"Quelle lettre suit immédiatement 'U' dans l'alphabet ?",r:"dg=="},
+  {q:"Énigme 3",e:"Combien font 3x7 ?",r:"MjE="},
+  {q:"Énigme 4",e:"Quel est l'animal symbole de la sagesse ?",r:"Y2hvdWV0dGU="},
+  {q:"Énigme 5",e:"Quelle planète est surnommée la planète rouge ?",r:"bWFycw=="},
+  {q:"Énigme 6",e:"Quelle couleur obtient-on en mélangeant bleu et jaune ?",r:"dmVydA=="},
+  {q:"Énigme 7",e:"Qui a peint la Joconde ?",r:"bMOpc29uYXJkIGRlIHZpbmNp"},
+  {q:"Énigme 8",e:"Combien de côtés possède un pentagone ?",r:"NQ=="},
+  {q:"Énigme 9",e:"Quel est le métal précieux jaune ?",r:"b3I="},
+  {q:"Énigme 10",e:"Quelle capitale européenne est surnommée la ville lumière ?",r:"cGFyaXM="},
+  {q:"Énigme 11",e:"Quel est le plus grand océan du monde ?",r:"cGFjaWZpcXVl"},
+  {q:"Énigme 12",e:"Combien de pattes a une araignée ?",r:"OA=="},
+  {q:"Énigme 13",e:"Quel élément chimique a pour symbole H ?",r:"aHlkcm9n7GVuZQ=="},
+  {q:"Énigme 14",e:"Quelle langue parle-t-on principalement au Brésil ?",r:"cG9ydHVnYWlz"}
 ];
 
 const enigmesContainer = document.getElementById('enigmes');
@@ -111,7 +115,7 @@ enigmesData.forEach((data, index) => {
   const input = clone.querySelector('input');
   const result = clone.querySelector('.resultat');
   clone.querySelector('button').onclick = () => {
-    if(input.value.trim().toLowerCase() === data.r){
+    if(hash(input.value) === data.r){
       result.textContent = "Correct !";
       result.classList.add('text-green-600');
     } else {
