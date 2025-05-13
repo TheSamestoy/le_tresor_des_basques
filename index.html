@@ -78,7 +78,9 @@
     </div>
   </div>
 
-  <audio id="mystery-sound" src="https://cdn.pixabay.com/download/audio/2022/10/11/audio_d0e46c0bb7.mp3?filename=dark-mystery-ambient-11476.mp3"></audio>
+  <audio id="mystery-sound" preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2022/10/11/audio_d0e46c0bb7.mp3?filename=dark-mystery-ambient-11476.mp3" type="audio/mpeg">
+  </audio>
 
 <script>
 const images = [
@@ -146,19 +148,28 @@ enigmesData.forEach((data, index) => {
     if (hash(val) === data.r) {
       result.textContent = "Correct !";
       result.classList.add('text-green-600');
-      button.style.transition = 'opacity 2s ease-out';
-      button.style.opacity = '0';
+
       setTimeout(() => {
-        button.style.display = 'none';
-        const phrase = 'Ez dago atzera bueltarik';
-        message.innerHTML = [...phrase].map(l => `<span class='hidden-letter'>${l}</span>`).join('');
-        const spans = message.querySelectorAll('span');
-        audio.play();
-        spans.forEach(span => {
-          const delay = Math.random() * 10;
-          setTimeout(() => span.style.opacity = '1', delay * 1000);
-        });
-      }, 2000);
+        button.style.transition = 'opacity 2s ease-out';
+        result.style.transition = 'opacity 2s ease-out';
+        button.style.opacity = '0';
+        result.style.opacity = '0';
+
+        setTimeout(() => {
+          button.style.display = 'none';
+          result.style.display = 'none';
+
+          const phrase = 'Ez dago atzera bueltarik';
+          message.innerHTML = [...phrase].map(l => `<span class='hidden-letter'>${l === ' ' ? '&nbsp;' : l}</span>`).join('');
+          const spans = message.querySelectorAll('span');
+          audio.volume = 0.5;
+          audio.play().catch(() => {});
+          spans.forEach(span => {
+            const delay = Math.random() * 10;
+            setTimeout(() => span.style.opacity = '1', delay * 1000);
+          });
+        }, 2000);
+      }, 5000);
     } else {
       result.textContent = "Essaie encore !";
       result.classList.add('text-red-600');
