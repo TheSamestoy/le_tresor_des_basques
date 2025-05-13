@@ -42,7 +42,7 @@
 
     @keyframes fall {
       to {
-        transform: translateY(800px) rotate(90deg);
+        transform: translateY(800px) rotate(var(--rot, 90deg));
         opacity: 0;
       }
     }
@@ -59,7 +59,7 @@
       <template id="enigme-template">
         <div class="enigme hidden text-center">
           <h2 class="text-xl font-semibold mb-4"></h2>
-          <p class="mb-4"></p>
+          <p class="mb-4 question"></p>
           <input type="text" class="border rounded px-4 py-2 w-full mb-4" placeholder="Votre réponse">
           <button class="bg-gray-800 text-white px-4 py-2 rounded">Valider</button>
           <p class="resultat mt-4 font-semibold"></p>
@@ -123,22 +123,35 @@ let current = 0;
 enigmesData.forEach((data, index) => {
   const clone = template.content.cloneNode(true);
   const h2 = clone.querySelector('h2');
-  h2.innerHTML = [...data.q].map(letter => `<span>${letter}</span>`).join('');
-  clone.querySelector('p').textContent = data.e;
+  h2.textContent = data.q;
+
+  const questionEl = clone.querySelector('.question');
+  questionEl.innerHTML = [...data.e].map(letter => `<span>${letter}</span>`).join('');
+
   const input = clone.querySelector('input');
   const result = clone.querySelector('.resultat');
-  clone.querySelector('button').onclick = () => {
+  const button = clone.querySelector('button');
+
+  button.onclick = () => {
     const val = input.value.trim().toLowerCase();
-    if(hash(val) === data.r){
+    if (hash(val) === data.r) {
       result.textContent = "Correct !";
       result.classList.add('text-green-600');
-    } else if(val === 'effondre') {
-      h2.classList.add('falling');
+    } else if (val === 'effondre') {
+      const spans = questionEl.querySelectorAll('span');
+      spans.forEach((span, i) => {
+        const delay = Math.random() * 3; // max 3s
+        const rotation = (Math.random() * 180 - 90).toFixed(0) + 'deg';
+        span.style.animationDelay = `${delay}s`;
+        span.style.setProperty('--rot', rotation);
+      });
+      questionEl.classList.add('falling');
     } else {
       result.textContent = "Essaie encore !";
       result.classList.add('text-red-600');
     }
   };
+
   if(index === 0) clone.querySelector('.enigme').classList.remove('hidden');
   enigmesContainer.appendChild(clone);
 });
