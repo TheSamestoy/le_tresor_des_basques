@@ -6,6 +6,8 @@
   <title>Chasse au Trésor</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap');
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       margin: 0;
@@ -35,16 +37,18 @@
       border-radius: 1rem;
     }
 
-    .falling span {
-      display: inline-block;
-      animation: fall 1s forwards;
+    .basque-message {
+      font-family: 'UnifrakturCook', cursive;
+      font-size: 1.5rem;
+      text-align: center;
+      margin-top: 1rem;
+      color: #111;
     }
 
-    @keyframes fall {
-      to {
-        transform: translateY(800px) rotate(var(--rot, 90deg));
-        opacity: 0;
-      }
+    .hidden-letter {
+      opacity: 0;
+      display: inline-block;
+      transition: opacity 1s ease-in;
     }
   </style>
 </head>
@@ -63,6 +67,7 @@
           <input type="text" class="border rounded px-4 py-2 w-full mb-4" placeholder="Votre réponse">
           <button class="bg-gray-800 text-white px-4 py-2 rounded">Valider</button>
           <p class="resultat mt-4 font-semibold"></p>
+          <p class="basque-message"></p>
         </div>
       </template>
     </div>
@@ -72,6 +77,8 @@
       <button id="next" class="bg-gray-200 px-4 py-2 rounded">Suivant →</button>
     </div>
   </div>
+
+  <audio id="mystery-sound" src="https://cdn.pixabay.com/download/audio/2022/10/11/audio_d0e46c0bb7.mp3?filename=dark-mystery-ambient-11476.mp3"></audio>
 
 <script>
 const images = [
@@ -126,26 +133,32 @@ enigmesData.forEach((data, index) => {
   h2.textContent = data.q;
 
   const questionEl = clone.querySelector('.question');
-  questionEl.innerHTML = [...data.e].map(letter => `<span>${letter}</span>`).join('');
+  questionEl.textContent = data.e;
 
   const input = clone.querySelector('input');
   const result = clone.querySelector('.resultat');
   const button = clone.querySelector('button');
+  const message = clone.querySelector('.basque-message');
+  const audio = document.getElementById('mystery-sound');
 
   button.onclick = () => {
     const val = input.value.trim().toLowerCase();
     if (hash(val) === data.r) {
       result.textContent = "Correct !";
       result.classList.add('text-green-600');
-    } else if (val === 'effondre') {
-      const spans = questionEl.querySelectorAll('span');
-      spans.forEach((span, i) => {
-        const delay = Math.random() * 3; // max 3s
-        const rotation = (Math.random() * 180 - 90).toFixed(0) + 'deg';
-        span.style.animationDelay = `${delay}s`;
-        span.style.setProperty('--rot', rotation);
-      });
-      questionEl.classList.add('falling');
+      button.style.transition = 'opacity 2s ease-out';
+      button.style.opacity = '0';
+      setTimeout(() => {
+        button.style.display = 'none';
+        const phrase = 'Ez dago atzera bueltarik';
+        message.innerHTML = [...phrase].map(l => `<span class='hidden-letter'>${l}</span>`).join('');
+        const spans = message.querySelectorAll('span');
+        audio.play();
+        spans.forEach(span => {
+          const delay = Math.random() * 10;
+          setTimeout(() => span.style.opacity = '1', delay * 1000);
+        });
+      }, 2000);
     } else {
       result.textContent = "Essaie encore !";
       result.classList.add('text-red-600');
