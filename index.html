@@ -34,6 +34,18 @@
       background-color: rgba(255, 255, 255, 0.85);
       border-radius: 1rem;
     }
+
+    .falling span {
+      display: inline-block;
+      animation: fall 1s forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(800px) rotate(90deg);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body class="flex justify-center items-center min-h-screen">
@@ -81,7 +93,7 @@ function changeBackground() {
 }
 
 bgSlider.style.backgroundImage = `url(${images[0]})`;
-setInterval(changeBackground, 30000);
+setInterval(changeBackground, 60000);
 
 function hash(str) {
   return btoa(str.toLowerCase().trim());
@@ -110,14 +122,18 @@ let current = 0;
 
 enigmesData.forEach((data, index) => {
   const clone = template.content.cloneNode(true);
-  clone.querySelector('h2').textContent = data.q;
+  const h2 = clone.querySelector('h2');
+  h2.innerHTML = [...data.q].map(letter => `<span>${letter}</span>`).join('');
   clone.querySelector('p').textContent = data.e;
   const input = clone.querySelector('input');
   const result = clone.querySelector('.resultat');
   clone.querySelector('button').onclick = () => {
-    if(hash(input.value) === data.r){
+    const val = input.value.trim().toLowerCase();
+    if(hash(val) === data.r){
       result.textContent = "Correct !";
       result.classList.add('text-green-600');
+    } else if(val === 'effondre') {
+      h2.classList.add('falling');
     } else {
       result.textContent = "Essaie encore !";
       result.classList.add('text-red-600');
